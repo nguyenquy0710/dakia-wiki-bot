@@ -1,6 +1,6 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import connectDB from '@/lib/db/mongoose';
+import { connectDB } from '@/lib/db/mongoose';
 import User from '@/models/User';
 import { verifyPassword } from '@/lib/auth/password';
 
