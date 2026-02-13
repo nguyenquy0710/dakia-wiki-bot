@@ -77,7 +77,7 @@ const AdminCategoriesPage: FC = () => {
   };
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
     if (name === 'name') {
@@ -279,8 +279,8 @@ const AdminCategoriesPage: FC = () => {
                         {category.parentId && (
                           <div>
                             <small className="text-primary">
-                              📂 {typeof category.parentId === 'object' && 'name' in category.parentId 
-                                ? category.parentId.name 
+                              📂 {typeof category.parentId === 'object' && category.parentId !== null && 'name' in category.parentId 
+                                ? (category.parentId as any).name 
                                 : 'Parent Category'}
                             </small>
                           </div>
