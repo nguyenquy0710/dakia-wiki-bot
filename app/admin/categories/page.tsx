@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useCallback } from 'react';
 import { IWikiCategory } from '@/types/models';
 
 interface CategoryFormData {
@@ -31,7 +31,7 @@ const AdminCategoriesPage: FC = () => {
   });
 
   // Fetch categories
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/categories?search=${searchQuery}`);
@@ -48,20 +48,20 @@ const AdminCategoriesPage: FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery]);
 
   useEffect(() => {
     fetchCategories();
-  }, [searchQuery]);
+  }, [fetchCategories]);
 
   // Generate slug from name
   const generateSlug = (name: string) => {
     return name
       .toLowerCase()
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'd')
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '') // Remove Vietnamese accents
-      .replace(/đ/g, 'd')
-      .replace(/Đ/g, 'D')
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
