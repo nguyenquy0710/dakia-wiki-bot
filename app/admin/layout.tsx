@@ -1,22 +1,36 @@
-import { FC, ReactNode } from 'react';
-import AdminSidebar from './components/AdminSidebar';
+'use client';
+
+import { FC, ReactNode, useState } from 'react';
+import TailAdminSidebar from './components/TailAdminSidebar';
+import TailAdminHeader from './components/TailAdminHeader';
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
-  return (
-    <div className="min-vh-100 d-flex">
-      {/* Sidebar */}
-      <AdminSidebar />
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-      {/* Main Content */}
-      <main className="flex-grow-1 bg-light">
-        <div className="container-fluid p-4">
-          {children}
+  return (
+    <div className="dark:bg-boxdark-2 dark:text-bodydark">
+      {/* Page Wrapper */}
+      <div className="flex h-screen overflow-hidden">
+        {/* Sidebar */}
+        <TailAdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+        {/* Content Area */}
+        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+          {/* Header */}
+          <TailAdminHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+          {/* Main Content */}
+          <main>
+            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+              {children}
+            </div>
+          </main>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
