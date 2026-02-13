@@ -1,0 +1,70 @@
+# These are supported funding model platforms
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# This is a YAML file
+# https://yaml.org/
+
+# github: [nhquydev]
+ko_fi: nhquydev
+# https://thanks.dev/profiles/nhquydev
+thanks_dev: u/gh/nhquydev
+
+# Additional custom funding options
+custom:
+  url: https://nhquy.dev/donate
+  label: Support me on my website
+  logo: https://nhquy.dev/assets/images/donate-logo.png
+  note: Your support helps me continue developing and maintaining open-source projects.
+  monthly: true
+  yearly: true
+  one_time: true
+  recurring: true
+  suggested_amounts:
+    - 5
+    - 10
+    - 20
+    - 50
+    - 100
+  currency: USD
+  privacy: true
+  tax_deductible: false
+  legal_name: NhQuy Dev
+  legal_country: US
+  legal_address: 123 Open Source St, Code City, CA 90000, USA
+  terms_of_service_url: https://nhquy.dev/terms
+  privacy_policy_url: https://nhquy.dev/privacy
+  refund_policy_url: https://nhquy.dev/refund
+  contact_email:
+    - nhquydev@example.com
+  social_media:
+    - platform: twitter
+      handle: nhquydev
+    - platform: github
+      handle: nhquydev
+    - platform: linkedin
+      handle: nhquydev
+  custom_fields:
+    - name: Project Name
+      value: vscode-scm
+    - name: Project URL
+      value: https://github.com/nhquydev/vscode-scm
+    - name: Description
+      value: A Visual Studio Code extension for source control management integration.
+    - name: License
+      value: MIT License
+    - name: Repository
+      value: https://github.com/nhquydev/vscode-scm
+    - name: Documentation
+      value: https://nhquy.dev/vscode-scm/docs
+    - name: Issue Tracker
+      value: https://github.com/nhquydev/vscode-scm/issues
+    - name: Changelog
+      value: https://github.com/nhquydev/vscode-scm/blob/main/CHANGELOG.md
+    - name: Contributors
+      value: https://github.com/nhquydev/vscode-scm/graphs/contributors
+    - name: Sponsors
+      value: https://github.com/nhquydev/vscode-scm/blob/main/SPONSORS.md
+    - name: Funding Goal
+      value: $5000 per month
+    - name: Current Funding
+      value: $1200 per month
