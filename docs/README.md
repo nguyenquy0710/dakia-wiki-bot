@@ -8,6 +8,16 @@ This documentation is specifically designed for **agentic AI systems** to unders
 
 ## Documentation Structure
 
+### 📝 [changelog/](./changelog/)
+**Update Logs & Changelogs**
+- Documentation updates
+- Feature changes
+- Style guide updates
+- Breaking changes
+- Migration guides
+
+All changelog files documenting project updates are stored here.
+
 ### 📁 [theme/](./theme/SKILL.md)
 **Theme & Design System**
 - Color palette (AI Tech Blue theme)
