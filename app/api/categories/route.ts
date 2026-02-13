@@ -89,6 +89,9 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Log for debugging
+    console.log('Creating category with status:', body.status);
+    
     // Create category
     const category = await WikiCategory.create({
       name: body.name,

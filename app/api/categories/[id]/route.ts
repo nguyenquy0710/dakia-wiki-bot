@@ -95,6 +95,9 @@ export async function PUT(
       }
     }
     
+    // Log for debugging
+    console.log('Updating category with status:', body.status);
+    
     const category = await WikiCategory.findByIdAndUpdate(
       id,
       {

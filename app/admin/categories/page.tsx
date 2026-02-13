@@ -148,6 +148,12 @@ const AdminCategoriesPage: FC = () => {
       
       const method = editingId ? 'PUT' : 'POST';
       
+      // Log form data for debugging
+      console.log('Submitting category with data:', {
+        ...formData,
+        status: formData.status,
+      });
+      
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
