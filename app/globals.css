@@ -4,6 +4,11 @@
 /* Import Bootstrap CSS */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+/* Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Modern Color Palette & CSS Variables - AI Tech Blue Theme */
 :root {
   /* Primary Brand Colors - AI Tech Blue (Modern, Tech-focused, Trustworthy) */
