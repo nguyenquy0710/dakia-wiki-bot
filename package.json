@@ -1,0 +1,53 @@
+{
+  "name": "dakia-wiki-bot",
+  "version": "1.0.0",
+  "description": "DAKIA Wiki Bot - Nền tảng quản lý và tra cứu wiki thông minh cho DAKIA Tech, được thiết kế để lưu trữ, tổ chức và chia sẻ kiến thức nội bộ một cách hiệu quả.",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenquy0710/dakia-wiki-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nguyenquy0710/dakia-wiki-bot/issues"
+  },
+  "homepage": "https://github.com/nguyenquy0710/dakia-wiki-bot#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bootstrap": "^5.3.3",
+    "jquery": "^3.7.1",
+    "mongoose": "^9.2.0",
+    "next": "^16.1.6",
+    "next-auth": "^4.24.13",
+    "react": "^19.2.4",
+    "react-bootstrap": "^2.10.7",
+    "react-dom": "^19.2.4",
+    "rehype-highlight": "^7.0.2",
+    "rehype-stringify": "^10.0.1",
+    "remark": "^15.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/jquery": "^3.5.31",
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "^8.5.6",
+    "typescript": "^5.9.3"
+  }
+}
