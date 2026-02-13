@@ -12,7 +12,11 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     
     // Build query
-    const query: any = {};
+    interface QueryFilter {
+      $or?: Array<{ name?: { $regex: string; $options: string } } | { description?: { $regex: string; $options: string } }>;
+    }
+    
+    const query: QueryFilter = {};
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },

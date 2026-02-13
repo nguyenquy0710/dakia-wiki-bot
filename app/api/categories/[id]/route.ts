@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db/mongoose';
 import WikiCategory from '@/models/WikiCategory';
-import { isValidObjectId, Types } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 
 export async function GET(
   request: NextRequest,
@@ -82,8 +82,8 @@ export async function PUT(
     if (body.slug) {
       const existingCategory = await WikiCategory.findOne({
         slug: body.slug,
-        _id: { $ne: id as any },
-      });
+        _id: { $ne: id },
+      } as Record<string, unknown>);
       
       if (existingCategory) {
         return NextResponse.json(
