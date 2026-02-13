@@ -14,24 +14,24 @@ Hệ thống được chia thành 2 phần chính:
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **Framework**: Next.js (với Static Site Generation - SSG)
-- **Language**: TypeScript/JavaScript
-- **Styling**: CSS Modules / Tailwind CSS / Styled Components
-- **UI Components**: React components
-- **Markdown Processing**: remark, rehype hoặc next-mdx-remote
+- **Framework**: Next.js 16 (App Router with SSG)
+- **Language**: TypeScript
+- **Styling**: Bootstrap 5 + Inline Styles
+- **UI Components**: React Functional Components
+- **Markdown Processing**: unified, remark, rehype
 
 ### Backend
 - **Runtime**: Node.js
-- **Framework**: Next.js API Routes hoặc Express.js
-- **Database**: MongoDB
-- **Authentication**: NextAuth.js hoặc JWT
+- **Framework**: Next.js 16 API Routes
+- **Database**: MongoDB with Mongoose
+- **Authentication**: NextAuth.js with Credentials Provider
 - **Password Encryption**: bcrypt
 
 ### Tools & Libraries
 - **Markdown to HTML**: unified, remark, rehype
-- **Form Validation**: zod, yup
-- **State Management**: React Context API hoặc Zustand
-- **API Client**: axios hoặc fetch
+- **Form Validation**: Built-in HTML5 + TypeScript
+- **State Management**: React Hooks (useState, useCallback, useEffect)
+- **API Client**: fetch API
 
 ## 📁 Cấu trúc Thư mục
 
@@ -195,20 +195,180 @@ export const ComponentName: FC<ComponentProps> = ({ prop1, prop2 }) => {
 ```
 
 ### API Routes Pattern
+
+#### Basic API Route
 ```typescript
 // app/api/[resource]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/db/mongodb';
+import { connectDB } from '@/lib/db/mongoose';
 
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
+    
+    // Parse query parameters
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get('search') || '';
+    
     // Logic
-    return NextResponse.json({ data: [] });
+    const data = await fetchData({ search });
+    
+    return NextResponse.json({ data });
   } catch (error) {
-    return NextResponse.json({ error: 'Error message' }, { status: 500 });
+    console.error('Error:', error);
+    return NextResponse.json(
+      { error: 'Không thể tải dữ liệu' },  // Vietnamese error
+      { status: 500 }
+    );
   }
 }
+```
+
+#### Dynamic API Route (Next.js 16 - CRITICAL!)
+
+**⚠️ BREAKING CHANGE: In Next.js 16, params are now async!**
+
+```typescript
+// app/api/[resource]/[id]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { connectDB } from '@/lib/db/mongoose';
+import { isValidObjectId } from 'mongoose';
+
+// ✅ Correct: params is Promise<{ id: string }>
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+    
+    // ✅ MUST await params!
+    const { id } = await params;
+    
+    if (!isValidObjectId(id)) {
+      return NextResponse.json(
+        { error: 'ID không hợp lệ' },
+        { status: 400 }
+      );
+    }
+    
+    const item = await Model.findById(id).lean();
+    
+    if (!item) {
+      return NextResponse.json(
+        { error: 'Không tìm thấy dữ liệu' },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json({ data: item });
+  } catch (error) {
+    console.error('Error:', error);
+    return NextResponse.json(
+      { error: 'Không thể tải dữ liệu' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+    
+    const { id } = await params;  // ✅ Await params
+    const body = await request.json();
+    
+    // Validation and update logic
+    const updated = await Model.findByIdAndUpdate(id, body, { new: true });
+    
+    return NextResponse.json({
+      message: 'Cập nhật thành công',
+      data: updated,
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return NextResponse.json(
+      { error: 'Không thể cập nhật' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Vietnamese Slug Generation
+
+```typescript
+/**
+ * Generate URL-friendly slug from Vietnamese text
+ * ⚠️ IMPORTANT: Replace đ/Đ BEFORE normalizing!
+ */
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/đ/g, 'd')      // ✅ Replace đ FIRST
+    .replace(/Đ/g, 'd')      // ✅ Replace Đ FIRST
+    .normalize('NFD')        // Then normalize
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/[^a-z0-9\s-]/g, '')    // Remove special chars
+    .replace(/\s+/g, '-')            // Spaces to hyphens
+    .replace(/-+/g, '-')             // Multiple hyphens to one
+    .trim();
+}
+
+// Examples:
+// "Công nghệ" → "cong-nghe"
+// "Đào tạo" → "dao-tao"
+```
+
+### CRUD Page Pattern
+
+```typescript
+'use client';
+
+import { FC, useState, useCallback, useEffect } from 'react';
+
+const AdminCRUDPage: FC = () => {
+  // State
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // ✅ Use useCallback for fetch functions
+  const fetchItems = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/items?search=${searchQuery}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setItems(data.data || []);
+        setError('');
+      } else {
+        setError(data.error || 'Không thể tải dữ liệu');
+      }
+    } catch (err) {
+      setError('Có lỗi xảy ra');
+    } finally {
+      setLoading(false);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+
+  // Render with loading/error/empty states
+  return (
+    <div>
+      {/* Header + Search + Items Grid + Modal */}
+    </div>
+  );
+};
 ```
 
 ## 🔐 Security Requirements
@@ -278,6 +438,233 @@ export async function markdownToHtml(markdown: string): Promise<string> {
 - Pre-render tất cả course pages tại build time
 - Sử dụng `generateStaticParams` cho dynamic routes
 - Revalidate khi có update từ admin
+
+## 🎨 Theme & Style Guide (AI Tech Blue)
+
+### Color Palette
+```typescript
+// Primary Colors - AI Tech Blue
+const PRIMARY = '#2563EB';           // Blue 600 - Main brand
+const PRIMARY_DARK = '#1E40AF';      // Blue 800 - Hover states
+const ACCENT = '#06B6D4';            // Cyan 500 - Gradient accent
+
+// Text Colors
+const TEXT_PRIMARY = '#0F172A';      // Dark slate - Headings
+const TEXT_SECONDARY = '#475569';    // Medium slate - Secondary
+const TEXT_MUTED = '#64748B';        // Light slate - Muted
+
+// Semantic Colors
+const SUCCESS = '#10B981';           // Green
+const WARNING = '#F59E0B';           // Amber
+const DANGER = '#EF4444';            // Red
+const INFO = '#06B6D4';              // Cyan
+
+// Neutrals
+const BACKGROUND = '#FFFFFF';        // Pure white
+const SURFACE = '#F8FAFC';           // Very light gray
+const BORDER = '#E2E8F0';            // Soft gray border
+```
+
+### Typography
+```typescript
+// Font Families
+const FONT_HEADING = "'Plus Jakarta Sans', -apple-system, sans-serif";
+const FONT_BODY = "'Inter', -apple-system, sans-serif";
+
+// Font Sizes
+const SIZE_BASE = '1.125rem';        // 18px
+const SIZE_H1 = '2.5rem';            // 40px
+const SIZE_H2 = '2rem';              // 32px
+const SIZE_H3 = '1.5rem';            // 24px
+const SIZE_SMALL = '0.875rem';       // 14px
+
+// Font Weights
+const WEIGHT_REGULAR = 400;
+const WEIGHT_SEMIBOLD = 600;
+const WEIGHT_BOLD = 700;
+```
+
+### Design Tokens
+```typescript
+// Spacing (Bootstrap scale 0-7)
+const SPACING_SM = '1rem';           // 16px
+const SPACING_MD = '1.5rem';         // 24px
+const SPACING_LG = '3rem';           // 48px
+
+// Border Radius
+const RADIUS_MD = '0.5rem';          // 8px
+const RADIUS_LG = '1rem';            // 16px
+const RADIUS_XL = '1.5rem';          // 24px
+const RADIUS_PILL = '9999px';        // Pill shape
+
+// Shadows
+const SHADOW_SM = '0 1px 2px rgba(0, 0, 0, 0.05)';
+const SHADOW_MD = '0 1px 3px rgba(0, 0, 0, 0.1)';
+const SHADOW_LG = '0 4px 12px rgba(0, 0, 0, 0.15)';
+
+// Gradients
+const GRADIENT_PRIMARY = 'linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)';
+const GRADIENT_SUBTLE = 'linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(6, 182, 212, 0.03) 100%)';
+```
+
+### Component Quick Reference
+
+**Card:**
+```tsx
+<div className="card border-0 shadow-sm rounded-3 hover-lift h-100">
+  <div className="card-body p-4">
+    <h3 className="h5 fw-semibold mb-3" style={{ color: '#0F172A' }}>
+      Title
+    </h3>
+    <p style={{ color: '#475569' }}>Content</p>
+  </div>
+</div>
+```
+
+**Button:**
+```tsx
+<button className="btn btn-primary btn-lg rounded-pill px-5 fw-semibold">
+  Action
+</button>
+```
+
+**Badge:**
+```tsx
+<span 
+  className="badge px-3 py-2 rounded-pill"
+  style={{
+    background: 'rgba(37, 99, 235, 0.1)',
+    color: '#2563EB',
+    border: '1px solid rgba(37, 99, 235, 0.2)'
+  }}
+>
+  Label
+</span>
+```
+
+## 🎨 Admin Theme Patterns
+
+### Admin Card Grid Pattern
+```tsx
+// Card-based layout for admin CRUD pages
+<div className="row g-4">
+  <div className="col-md-6 col-lg-4">
+    <div className="card border-0 shadow-sm rounded-3 h-100">
+      <div className="card-body p-4">
+        {/* Icon + Title */}
+        <div className="d-flex align-items-center mb-3">
+          <div 
+            className="me-3 d-flex align-items-center justify-content-center"
+            style={{ 
+              fontSize: '2rem',
+              width: '60px',
+              height: '60px',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            }}
+          >
+            📁
+          </div>
+          <div className="flex-grow-1">
+            <h5 className="mb-0 fw-semibold" style={{ color: '#0F172A' }}>
+              Title
+            </h5>
+            <small style={{ color: '#64748B' }}>subtitle</small>
+          </div>
+        </div>
+        
+        {/* Description */}
+        <p className="mb-3" style={{ color: '#475569' }}>
+          Description
+        </p>
+        
+        {/* Actions */}
+        <div className="btn-group btn-group-sm">
+          <button className="btn btn-outline-primary">Sửa</button>
+          <button className="btn btn-outline-danger">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Modal Component Pattern
+```tsx
+{/* Full-screen overlay modal */}
+<div 
+  className="modal show d-block" 
+  style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+  onClick={closeModal}
+>
+  <div 
+    className="modal-dialog modal-dialog-centered"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <div className="modal-content rounded-3">
+      <div className="modal-header">
+        <h5 className="modal-title fw-semibold" style={{ color: '#0F172A' }}>
+          Title
+        </h5>
+        <button 
+          type="button" 
+          className="btn-close"
+          onClick={closeModal}
+        />
+      </div>
+      <div className="modal-body">
+        {/* Form fields */}
+      </div>
+      <div className="modal-footer">
+        <button className="btn btn-secondary rounded-pill px-4">Hủy</button>
+        <button className="btn btn-primary">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### State Patterns (Loading, Error, Empty)
+```tsx
+{/* Loading State */}
+{loading && (
+  <div className="text-center py-5">
+    <div className="spinner-border text-primary" role="status">
+      <span className="visually-hidden">Đang tải...</span>
+    </div>
+  </div>
+)}
+
+{/* Error State */}
+{error && (
+  <div className="alert alert-danger" role="alert">
+    {error}
+  </div>
+)}
+
+{/* Empty State */}
+{!loading && items.length === 0 && (
+  <div className="text-center py-5 text-muted">
+    <h4>Chưa có dữ liệu</h4>
+    <p>Nhấn "Tạo mới" để bắt đầu</p>
+  </div>
+)}
+```
+
+### Search Bar Pattern
+```tsx
+<div className="card border-0 shadow-sm mb-4">
+  <div className="card-body">
+    <input
+      type="text"
+      className="form-control"
+      placeholder="🔍 Tìm kiếm..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  </div>
+</div>
+```
 
 ## 🎨 UI/UX Guidelines
 

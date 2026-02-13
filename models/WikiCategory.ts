@@ -40,6 +40,24 @@ const WikiCategorySchema = new Schema<IWikiCategory>(
       type: Boolean,
       default: true,
     },
+    // New fields for enhanced functionality
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
+    thumbnailUrl: {
+      type: String,
+      trim: true,
+    },
+    metaDescription: {
+      type: String,
+      trim: true,
+    },
+    articleCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -49,6 +67,7 @@ const WikiCategorySchema = new Schema<IWikiCategory>(
 // Create indexes
 WikiCategorySchema.index({ slug: 1 });
 WikiCategorySchema.index({ parentId: 1 });
+WikiCategorySchema.index({ status: 1 });
 
 const WikiCategory: Model<IWikiCategory> = 
   mongoose.models.WikiCategory || mongoose.model<IWikiCategory>('WikiCategory', WikiCategorySchema);

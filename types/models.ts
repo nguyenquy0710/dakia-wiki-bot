@@ -22,6 +22,11 @@ export interface IWikiCategory {
   parentId?: ObjectId;
   order: number;
   isPublished: boolean;
+  // New fields for enhanced functionality
+  status: 'active' | 'inactive';
+  thumbnailUrl?: string;
+  metaDescription?: string;
+  articleCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
