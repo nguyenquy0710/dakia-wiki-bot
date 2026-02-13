@@ -136,6 +136,21 @@ npm run type-check # TypeScript check
 3. Truy cập Admin: http://localhost:3000/admin/dashboard
 4. Quản lý Categories: http://localhost:3000/admin/categories ✅ (Fully functional!)
 
+## 🐛 Troubleshooting
+
+Gặp lỗi khi chạy dự án? Xem hướng dẫn khắc phục:
+
+| Lỗi | Tài liệu |
+|-----|----------|
+| `Cannot find module '@tailwindcss/postcss'` | **[docs/troubleshooting/tailwindcss-postcss-error.md](docs/troubleshooting/tailwindcss-postcss-error.md)** |
+| Build errors, dependency issues | **[SETUP.md](SETUP.md)** - Phần Troubleshooting |
+
+**Giải pháp nhanh**: Nếu gặp lỗi module not found sau khi clone hoặc pull code mới:
+```bash
+npm install  # Cài đặt lại dependencies
+rm -rf .next && npm run build  # Xóa cache và rebuild
+```
+
 ## 📖 Tài liệu
 
 | Tài liệu | Mô tả |
@@ -143,6 +158,7 @@ npm run type-check # TypeScript check
 | **[SETUP.md](SETUP.md)** | Hướng dẫn cài đặt chi tiết, troubleshooting |
 | **[FEATURES.md](FEATURES.md)** | Danh sách đầy đủ tính năng |
 | **[docs/](docs/README.md)** | Tài liệu kỹ thuật, architecture, coding conventions |
+| **[docs/troubleshooting/](docs/troubleshooting/)** | Hướng dẫn khắc phục lỗi thường gặp |
 
 ## 🛠️ Tech Stack
 
