@@ -10,6 +10,9 @@ export const ROUTES = {
   LOGIN: '/auth/login',
   REGISTER: '/auth/register',
   ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_ARTICLES: '/admin/articles',
+  ADMIN_CATEGORIES: '/admin/categories',
+  ADMIN_USERS: '/admin/users',
 } as const;
 
 // Validation helpers

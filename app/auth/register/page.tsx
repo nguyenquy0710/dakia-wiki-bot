@@ -226,7 +226,7 @@ const RegisterPage: FC = () => {
                   <div className="text-center">
                     <span className="text-muted">Đã có tài khoản? </span>
                     <a 
-                      href="/auth/login" 
+                      href={ROUTES.LOGIN}
                       className="text-decoration-none fw-semibold"
                       style={{ color: '#2563EB' }}
                     >
@@ -238,7 +238,7 @@ const RegisterPage: FC = () => {
                 {/* Back to Home */}
                 <div className="text-center mt-4 pt-3 border-top">
                   <a 
-                    href="/" 
+                    href={ROUTES.HOME}
                     className="text-muted text-decoration-none d-flex align-items-center justify-content-center"
                   >
                     <span className="me-2">←</span> Quay về trang chủ

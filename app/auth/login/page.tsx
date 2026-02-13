@@ -120,7 +120,7 @@ const LoginPage: FC = () => {
                   <div className="text-center">
                     <span className="text-muted">Chưa có tài khoản? </span>
                     <a 
-                      href="/auth/register" 
+                      href={ROUTES.REGISTER}
                       className="text-decoration-none fw-semibold"
                       style={{ color: '#2563EB' }}
                     >
@@ -132,7 +132,7 @@ const LoginPage: FC = () => {
                 {/* Back to Home */}
                 <div className="text-center mt-4 pt-3 border-top">
                   <a 
-                    href="/" 
+                    href={ROUTES.HOME}
                     className="text-muted text-decoration-none d-flex align-items-center justify-content-center"
                   >
                     <span className="me-2">←</span> Quay về trang chủ

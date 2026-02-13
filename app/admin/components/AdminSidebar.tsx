@@ -56,27 +56,27 @@ const AdminSidebar: FC = () => {
         <nav>
           <ul className="nav flex-column">
             <li className="nav-item mb-2">
-              <a className="nav-link text-white" href="/admin/dashboard">
+              <a className="nav-link text-white" href={ROUTES.ADMIN_DASHBOARD}>
                 📊 Dashboard
               </a>
             </li>
             <li className="nav-item mb-2">
-              <a className="nav-link text-white" href="/admin/articles">
+              <a className="nav-link text-white" href={ROUTES.ADMIN_ARTICLES}>
                 📝 Bài viết
               </a>
             </li>
             <li className="nav-item mb-2">
-              <a className="nav-link text-white" href="/admin/categories">
+              <a className="nav-link text-white" href={ROUTES.ADMIN_CATEGORIES}>
                 📂 Danh mục
               </a>
             </li>
             <li className="nav-item mb-2">
-              <a className="nav-link text-white" href="/admin/users">
+              <a className="nav-link text-white" href={ROUTES.ADMIN_USERS}>
                 👥 Người dùng
               </a>
             </li>
             <li className="nav-item mb-2">
-              <a className="nav-link text-white" href="/">
+              <a className="nav-link text-white" href={ROUTES.HOME}>
                 🏠 Về trang chủ
               </a>
             </li>
