@@ -1,22 +1,34 @@
-import { FC, ReactNode } from 'react';
-import AdminSidebar from './components/AdminSidebar';
+'use client';
+
+import { FC, ReactNode, useState } from 'react';
+import NewAdminSidebar from './components/NewAdminSidebar';
+import NewAdminHeader from './components/NewAdminHeader';
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
-  return (
-    <div className="min-vh-100 d-flex">
-      {/* Sidebar */}
-      <AdminSidebar />
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-      {/* Main Content */}
-      <main className="flex-grow-1 bg-light">
-        <div className="container-fluid p-4">
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <NewAdminSidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+      />
+
+      {/* Main Content Area */}
+      <div className="flex-1 bg-gray-50">
+        {/* Header */}
+        <NewAdminHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+
+        {/* Main Content */}
+        <main className="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
           {children}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };
