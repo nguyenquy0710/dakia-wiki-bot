@@ -3,6 +3,7 @@
 import { FC } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/lib/constants';
 
 const AdminSidebar: FC = () => {
   const { data: session, status } = useSession();
@@ -10,7 +11,7 @@ const AdminSidebar: FC = () => {
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    router.push('/auth/login');
+    router.push(ROUTES.LOGIN);
   };
 
   if (status === 'loading') {

@@ -3,6 +3,7 @@
 import { FC, FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/lib/constants';
 
 const LoginPage: FC = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const LoginPage: FC = () => {
       if (result?.error) {
         setError(result.error);
       } else {
-        router.push('/admin/dashboard');
+        router.push(ROUTES.ADMIN_DASHBOARD);
         router.refresh();
       }
     } catch (err) {

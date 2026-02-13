@@ -2,6 +2,7 @@
 
 import { FC, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROUTES, MIN_PASSWORD_LENGTH } from '@/lib/constants';
 
 const RegisterPage: FC = () => {
   const router = useRouter();
@@ -58,7 +59,7 @@ const RegisterPage: FC = () => {
       }
 
       // Success - redirect to login
-      router.push('/auth/login?registered=true');
+      router.push(`${ROUTES.LOGIN}?registered=true`);
     } catch (err) {
       setError('Có lỗi xảy ra khi đăng ký');
     } finally {
@@ -149,9 +150,9 @@ const RegisterPage: FC = () => {
                         onChange={handleChange}
                         required
                         disabled={isLoading}
-                        minLength={6}
+                        minLength={MIN_PASSWORD_LENGTH}
                       />
-                      <small className="text-muted">Tối thiểu 6 ký tự</small>
+                      <small className="text-muted">Tối thiểu {MIN_PASSWORD_LENGTH} ký tự</small>
                     </div>
 
                     <div className="col-md-6 mb-3">

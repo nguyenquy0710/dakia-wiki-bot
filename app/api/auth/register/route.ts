@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db/mongoose';
 import User from '@/models/User';
 import { hashPassword } from '@/lib/auth/password';
+import { validateEmail, MIN_PASSWORD_LENGTH } from '@/lib/constants';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,8 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!validateEmail(email)) {
       return NextResponse.json(
         { error: 'Email không hợp lệ' },
         { status: 400 }
@@ -26,9 +26,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate password length
-    if (password.length < 6) {
+    if (password.length < MIN_PASSWORD_LENGTH) {
       return NextResponse.json(
-        { error: 'Mật khẩu phải có ít nhất 6 ký tự' },
+        { error: `Mật khẩu phải có ít nhất ${MIN_PASSWORD_LENGTH} ký tự` },
         { status: 400 }
       );
     }
