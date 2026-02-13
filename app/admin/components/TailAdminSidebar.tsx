@@ -1,28 +1,10 @@
 'use client';
 
-import { FC, useState, useRef, useEffect } from 'react';
+import { FC, useRef, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants';
-
-interface SidebarLinkGroupProps {
-  children: (handleClick: () => void, open: boolean) => React.ReactNode;
-  activeCondition: boolean;
-}
-
-const SidebarLinkGroup: FC<SidebarLinkGroupProps> = ({
-  children,
-  activeCondition,
-}) => {
-  const [open, setOpen] = useState<boolean>(activeCondition);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-  return <>{children(handleClick, open)}</>;
-};
 
 interface TailAdminSidebarProps {
   sidebarOpen: boolean;
