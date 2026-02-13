@@ -19,7 +19,9 @@ export async function GET(
       );
     }
     
-    const category = await WikiCategory.findById(id).lean();
+    const category = await WikiCategory.findById(id)
+      .populate('parentId', 'name slug')
+      .lean();
     
     if (!category) {
       return NextResponse.json(
@@ -104,6 +106,10 @@ export async function PUT(
         parentId: body.parentId || null,
         order: body.order,
         isPublished: body.isPublished,
+        status: body.status || 'active',
+        thumbnailUrl: body.thumbnailUrl || '',
+        metaDescription: body.metaDescription || '',
+        // articleCount should not be manually updated, it's auto-calculated
       },
       { new: true, runValidators: true }
     );

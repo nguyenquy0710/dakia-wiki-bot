@@ -24,8 +24,9 @@ export async function GET(request: NextRequest) {
       ];
     }
     
-    // Get categories with pagination
+    // Get categories with pagination and populate parent
     const categories = await WikiCategory.find(query)
+      .populate('parentId', 'name slug')
       .sort({ order: 1, name: 1 })
       .skip((page - 1) * limit)
       .limit(limit)
@@ -98,6 +99,10 @@ export async function POST(request: NextRequest) {
       parentId: body.parentId || null,
       order: body.order || 0,
       isPublished: body.isPublished !== undefined ? body.isPublished : true,
+      status: body.status || 'active',
+      thumbnailUrl: body.thumbnailUrl || '',
+      metaDescription: body.metaDescription || '',
+      articleCount: 0,
     });
     
     return NextResponse.json(

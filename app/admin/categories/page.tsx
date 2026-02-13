@@ -9,8 +9,12 @@ interface CategoryFormData {
   description: string;
   icon: string;
   color: string;
+  parentId: string;
   order: number;
   isPublished: boolean;
+  status: 'active' | 'inactive';
+  thumbnailUrl: string;
+  metaDescription: string;
 }
 
 const AdminCategoriesPage: FC = () => {
@@ -26,8 +30,12 @@ const AdminCategoriesPage: FC = () => {
     description: '',
     icon: '📁',
     color: '#2563EB',
+    parentId: '',
     order: 0,
     isPublished: true,
+    status: 'active',
+    thumbnailUrl: '',
+    metaDescription: '',
   });
 
   // Fetch categories
@@ -100,8 +108,12 @@ const AdminCategoriesPage: FC = () => {
       description: '',
       icon: '📁',
       color: '#2563EB',
+      parentId: '',
       order: 0,
       isPublished: true,
+      status: 'active',
+      thumbnailUrl: '',
+      metaDescription: '',
     });
     setShowModal(true);
   };
@@ -115,8 +127,12 @@ const AdminCategoriesPage: FC = () => {
       description: category.description,
       icon: category.icon || '📁',
       color: category.color || '#2563EB',
+      parentId: category.parentId?.toString() || '',
       order: category.order,
       isPublished: category.isPublished,
+      status: category.status || 'active',
+      thumbnailUrl: category.thumbnailUrl || '',
+      metaDescription: category.metaDescription || '',
     });
     setShowModal(true);
   };
@@ -230,32 +246,75 @@ const AdminCategoriesPage: FC = () => {
                 <div className="card border-0 shadow-sm h-100">
                   <div className="card-body">
                     <div className="d-flex align-items-center mb-3">
-                      <div 
-                        className="me-3 d-flex align-items-center justify-content-center"
-                        style={{ 
-                          fontSize: '2rem',
-                          width: '60px',
-                          height: '60px',
-                          borderRadius: '12px',
-                          backgroundColor: `${category.color}15`,
-                        }}
-                      >
-                        {category.icon}
-                      </div>
+                      {/* Icon or Thumbnail */}
+                      {category.thumbnailUrl ? (
+                        <img 
+                          src={category.thumbnailUrl}
+                          alt={category.name}
+                          className="me-3"
+                          style={{ 
+                            width: '60px',
+                            height: '60px',
+                            borderRadius: '12px',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <div 
+                          className="me-3 d-flex align-items-center justify-content-center"
+                          style={{ 
+                            fontSize: '2rem',
+                            width: '60px',
+                            height: '60px',
+                            borderRadius: '12px',
+                            backgroundColor: `${category.color}15`,
+                          }}
+                        >
+                          {category.icon}
+                        </div>
+                      )}
                       <div className="flex-grow-1">
                         <h5 className="mb-0">{category.name}</h5>
                         <small className="text-muted">{category.slug}</small>
+                        {category.parentId && (
+                          <div>
+                            <small className="text-primary">
+                              📂 {typeof category.parentId === 'object' && 'name' in category.parentId 
+                                ? category.parentId.name 
+                                : 'Parent Category'}
+                            </small>
+                          </div>
+                        )}
                       </div>
-                      {!category.isPublished && (
-                        <span className="badge bg-secondary">Nháp</span>
-                      )}
+                      <div className="d-flex flex-column gap-1">
+                        {category.status === 'active' ? (
+                          <span className="badge bg-success">Active</span>
+                        ) : (
+                          <span className="badge bg-secondary">Inactive</span>
+                        )}
+                        {!category.isPublished && (
+                          <span className="badge bg-warning">Nháp</span>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-muted mb-3">
+                    <p className="text-muted mb-2" style={{ fontSize: '0.9rem' }}>
                       {category.description}
                     </p>
-                    <div className="d-flex justify-content-between align-items-center">
+                    {category.metaDescription && (
+                      <p className="text-muted small mb-2" style={{ fontSize: '0.8rem', fontStyle: 'italic' }}>
+                        SEO: {category.metaDescription.substring(0, 60)}...
+                      </p>
+                    )}
+                    <div className="d-flex justify-content-between align-items-center mb-2">
                       <div className="text-muted small">
-                        <span>Thứ tự: {category.order}</span>
+                        <span>📊 Số bài: {category.articleCount || 0}</span>
+                        <span className="ms-3">📋 Thứ tự: {category.order}</span>
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="text-muted" style={{ fontSize: '0.75rem' }}>
+                        <div>Tạo: {new Date(category.createdAt).toLocaleDateString('vi-VN')}</div>
+                        <div>Sửa: {new Date(category.updatedAt).toLocaleDateString('vi-VN')}</div>
                       </div>
                       <div className="btn-group btn-group-sm">
                         <button 
@@ -339,6 +398,55 @@ const AdminCategoriesPage: FC = () => {
                       required
                     />
                   </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Mô tả SEO (Meta Description)</label>
+                    <textarea
+                      className="form-control"
+                      name="metaDescription"
+                      value={formData.metaDescription}
+                      onChange={handleInputChange}
+                      rows={2}
+                      placeholder="Mô tả ngắn để tối ưu SEO (150-160 ký tự)"
+                    />
+                    <small className="text-muted">
+                      {formData.metaDescription.length}/160 ký tự
+                    </small>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Danh mục cha (Parent Category)</label>
+                    <select
+                      className="form-select"
+                      name="parentId"
+                      value={formData.parentId}
+                      onChange={handleInputChange}
+                    >
+                      <option value="">-- Không có (Danh mục gốc) --</option>
+                      {categories
+                        .filter(cat => cat._id.toString() !== editingId)
+                        .map(cat => (
+                          <option key={cat._id.toString()} value={cat._id.toString()}>
+                            {cat.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Thumbnail URL</label>
+                    <input
+                      type="url"
+                      className="form-control"
+                      name="thumbnailUrl"
+                      value={formData.thumbnailUrl}
+                      onChange={handleInputChange}
+                      placeholder="https://example.com/image.png"
+                    />
+                    <small className="text-muted">
+                      Đường dẫn hình ảnh đại diện cho danh mục
+                    </small>
+                  </div>
                   
                   <div className="row">
                     <div className="col-md-6 mb-3">
@@ -365,15 +473,30 @@ const AdminCategoriesPage: FC = () => {
                     </div>
                   </div>
                   
-                  <div className="mb-3">
-                    <label className="form-label">Thứ tự hiển thị</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      name="order"
-                      value={formData.order}
-                      onChange={handleInputChange}
-                    />
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Thứ tự hiển thị</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        name="order"
+                        value={formData.order}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Trạng thái</label>
+                      <select
+                        className="form-select"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleInputChange}
+                      >
+                        <option value="active">Active (Hoạt động)</option>
+                        <option value="inactive">Inactive (Tạm ẩn)</option>
+                      </select>
+                    </div>
                   </div>
                   
                   <div className="form-check">
@@ -389,6 +512,14 @@ const AdminCategoriesPage: FC = () => {
                       Xuất bản
                     </label>
                   </div>
+
+                  {editingId && (
+                    <div className="mt-3 p-3 bg-light rounded">
+                      <small className="text-muted">
+                        <strong>Thông tin:</strong> Số bài viết được tự động cập nhật.
+                      </small>
+                    </div>
+                  )}
                 </div>
                 <div className="modal-footer">
                   <button 
