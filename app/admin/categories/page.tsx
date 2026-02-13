@@ -339,7 +339,7 @@ const AdminCategoriesPage: FC = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal - Enhanced Design */}
       {showModal && (
         <div 
           className="modal show d-block" 
@@ -347,13 +347,13 @@ const AdminCategoriesPage: FC = () => {
           onClick={() => setShowModal(false)}
         >
           <div 
-            className="modal-dialog modal-dialog-centered"
+            className="modal-dialog modal-dialog-centered modal-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">
-                  {editingId ? 'Chỉnh sửa danh mục' : 'Tạo danh mục mới'}
+            <div className="modal-content rounded-3 shadow-lg">
+              <div className="modal-header border-0 pb-0">
+                <h5 className="modal-title fw-bold" style={{ color: '#0F172A' }}>
+                  {editingId ? '✏️ Chỉnh sửa danh mục' : '➕ Tạo danh mục mới'}
                 </h5>
                 <button 
                   type="button" 
@@ -362,175 +362,276 @@ const AdminCategoriesPage: FC = () => {
                 ></button>
               </div>
               <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label className="form-label">Tên danh mục *</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label">Slug *</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="slug"
-                      value={formData.slug}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label">Mô tả *</label>
-                    <textarea
-                      className="form-control"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      rows={3}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Mô tả SEO (Meta Description)</label>
-                    <textarea
-                      className="form-control"
-                      name="metaDescription"
-                      value={formData.metaDescription}
-                      onChange={handleInputChange}
-                      rows={2}
-                      placeholder="Mô tả ngắn để tối ưu SEO (150-160 ký tự)"
-                    />
-                    <small className="text-muted">
-                      {formData.metaDescription.length}/160 ký tự
-                    </small>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Danh mục cha (Parent Category)</label>
-                    <select
-                      className="form-select"
-                      name="parentId"
-                      value={formData.parentId}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">-- Không có (Danh mục gốc) --</option>
-                      {categories
-                        .filter(cat => cat._id.toString() !== editingId)
-                        .map(cat => (
-                          <option key={cat._id.toString()} value={cat._id.toString()}>
-                            {cat.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Thumbnail URL</label>
-                    <input
-                      type="url"
-                      className="form-control"
-                      name="thumbnailUrl"
-                      value={formData.thumbnailUrl}
-                      onChange={handleInputChange}
-                      placeholder="https://example.com/image.png"
-                    />
-                    <small className="text-muted">
-                      Đường dẫn hình ảnh đại diện cho danh mục
-                    </small>
-                  </div>
-                  
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Icon (Emoji)</label>
+                <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                  {/* Basic Information Section */}
+                  <div className="mb-4">
+                    <h6 className="fw-semibold mb-3" style={{ color: '#2563EB' }}>
+                      📝 Thông tin cơ bản
+                    </h6>
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">
+                        Tên danh mục <span className="text-danger">*</span>
+                      </label>
                       <input
                         type="text"
                         className="form-control"
-                        name="icon"
-                        value={formData.icon}
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
-                        placeholder="📁"
+                        placeholder="Ví dụ: Công nghệ AI"
+                        required
                       />
+                      <small className="text-muted">Tên hiển thị của danh mục</small>
                     </div>
                     
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Màu sắc</label>
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">
+                        Slug <span className="text-danger">*</span>
+                      </label>
                       <input
-                        type="color"
-                        className="form-control form-control-color"
-                        name="color"
-                        value={formData.color}
+                        type="text"
+                        className="form-control"
+                        name="slug"
+                        value={formData.slug}
                         onChange={handleInputChange}
+                        placeholder="cong-nghe-ai"
+                        required
                       />
+                      <small className="text-muted">
+                        URL thân thiện (tự động sinh từ tên danh mục)
+                      </small>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">
+                        Mô tả <span className="text-danger">*</span>
+                      </label>
+                      <textarea
+                        className="form-control"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        rows={3}
+                        placeholder="Mô tả chi tiết về danh mục..."
+                        required
+                      />
+                      <small className="text-muted">Mô tả sẽ hiển thị trên trang danh mục</small>
                     </div>
                   </div>
-                  
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Thứ tự hiển thị</label>
-                      <input
-                        type="number"
+
+                  {/* SEO & Categorization Section */}
+                  <div className="mb-4 pb-3 border-bottom">
+                    <h6 className="fw-semibold mb-3" style={{ color: '#2563EB' }}>
+                      🎯 SEO & Phân loại
+                    </h6>
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">
+                        Meta Description (SEO)
+                      </label>
+                      <textarea
                         className="form-control"
-                        name="order"
-                        value={formData.order}
+                        name="metaDescription"
+                        value={formData.metaDescription}
                         onChange={handleInputChange}
+                        rows={2}
+                        placeholder="Mô tả ngắn gọn để tối ưu SEO (150-160 ký tự)"
+                        maxLength={160}
                       />
+                      <div className="d-flex justify-content-between">
+                        <small className="text-muted">Tối ưu cho công cụ tìm kiếm</small>
+                        <small className={formData.metaDescription.length > 160 ? 'text-danger' : 'text-muted'}>
+                          {formData.metaDescription.length}/160 ký tự
+                        </small>
+                      </div>
                     </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Trạng thái</label>
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">
+                        Danh mục cha
+                      </label>
                       <select
                         className="form-select"
-                        name="status"
-                        value={formData.status}
+                        name="parentId"
+                        value={formData.parentId}
                         onChange={handleInputChange}
                       >
-                        <option value="active">Active (Hoạt động)</option>
-                        <option value="inactive">Inactive (Tạm ẩn)</option>
+                        <option value="">-- Không có (Danh mục gốc) --</option>
+                        {categories
+                          .filter(cat => cat._id.toString() !== editingId)
+                          .map(cat => (
+                            <option key={cat._id.toString()} value={cat._id.toString()}>
+                              {cat.name}
+                            </option>
+                          ))}
                       </select>
+                      <small className="text-muted">Chọn danh mục cha để tạo cấu trúc phân cấp</small>
                     </div>
                   </div>
-                  
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="isPublished"
-                      id="isPublished"
-                      checked={formData.isPublished}
-                      onChange={handleInputChange}
-                    />
-                    <label className="form-check-label" htmlFor="isPublished">
-                      Xuất bản
-                    </label>
+
+                  {/* Visual Design Section */}
+                  <div className="mb-4 pb-3 border-bottom">
+                    <h6 className="fw-semibold mb-3" style={{ color: '#2563EB' }}>
+                      🎨 Thiết kế & Hình ảnh
+                    </h6>
+                    
+                    <div className="mb-3">
+                      <label className="form-label fw-medium">Thumbnail URL</label>
+                      <input
+                        type="url"
+                        className="form-control"
+                        name="thumbnailUrl"
+                        value={formData.thumbnailUrl}
+                        onChange={handleInputChange}
+                        placeholder="https://example.com/image.png"
+                      />
+                      <small className="text-muted">Hình ảnh đại diện cho danh mục</small>
+                      {formData.thumbnailUrl && (
+                        <div className="mt-2 p-2 bg-light rounded">
+                          <small className="text-muted d-block mb-1">Preview:</small>
+                          <img 
+                            src={formData.thumbnailUrl} 
+                            alt="Thumbnail preview" 
+                            style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '8px' }}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label fw-medium">Icon (Emoji)</label>
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="icon"
+                            value={formData.icon}
+                            onChange={handleInputChange}
+                            placeholder="📁"
+                            maxLength={2}
+                          />
+                          {formData.icon && (
+                            <div 
+                              className="d-flex align-items-center justify-content-center"
+                              style={{ 
+                                fontSize: '2rem',
+                                width: '50px',
+                                height: '50px',
+                                borderRadius: '8px',
+                                backgroundColor: formData.color || '#2563EB'
+                              }}
+                            >
+                              {formData.icon}
+                            </div>
+                          )}
+                        </div>
+                        <small className="text-muted">Icon emoji để hiển thị</small>
+                      </div>
+                      
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label fw-medium">Màu sắc</label>
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="color"
+                            className="form-control form-control-color"
+                            name="color"
+                            value={formData.color}
+                            onChange={handleInputChange}
+                            style={{ width: '60px', height: '38px' }}
+                          />
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={formData.color}
+                            onChange={(e) => handleInputChange({ target: { name: 'color', value: e.target.value } } as any)}
+                            placeholder="#2563EB"
+                          />
+                        </div>
+                        <small className="text-muted">Màu chủ đạo của danh mục</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Settings Section */}
+                  <div className="mb-3">
+                    <h6 className="fw-semibold mb-3" style={{ color: '#2563EB' }}>
+                      ⚙️ Cài đặt
+                    </h6>
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label fw-medium">Thứ tự hiển thị</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="order"
+                          value={formData.order}
+                          onChange={handleInputChange}
+                          placeholder="0"
+                        />
+                        <small className="text-muted">Số thứ tự sắp xếp (nhỏ hơn = trước)</small>
+                      </div>
+
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label fw-medium">Trạng thái</label>
+                        <select
+                          className="form-select"
+                          name="status"
+                          value={formData.status}
+                          onChange={handleInputChange}
+                        >
+                          <option value="active">✅ Active (Hoạt động)</option>
+                          <option value="inactive">⏸️ Inactive (Tạm ẩn)</option>
+                        </select>
+                        <small className="text-muted">Trạng thái hiển thị danh mục</small>
+                      </div>
+                    </div>
+                    
+                    <div className="form-check form-switch">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="isPublished"
+                        id="isPublished"
+                        checked={formData.isPublished}
+                        onChange={handleInputChange}
+                        role="switch"
+                      />
+                      <label className="form-check-label fw-medium" htmlFor="isPublished">
+                        📢 Xuất bản danh mục
+                      </label>
+                    </div>
                   </div>
 
                   {editingId && (
-                    <div className="mt-3 p-3 bg-light rounded">
-                      <small className="text-muted">
-                        <strong>Thông tin:</strong> Số bài viết được tự động cập nhật.
-                      </small>
+                    <div className="alert alert-info d-flex align-items-start" role="alert">
+                      <div className="me-2" style={{ fontSize: '1.2rem' }}>ℹ️</div>
+                      <div>
+                        <strong>Thông tin:</strong>
+                        <ul className="mb-0 mt-1">
+                          <li>Số bài viết được tự động cập nhật khi có bài mới</li>
+                          <li>Thay đổi slug có thể ảnh hưởng đến SEO</li>
+                        </ul>
+                      </div>
                     </div>
                   )}
                 </div>
-                <div className="modal-footer">
+                <div className="modal-footer border-0 pt-0">
                   <button 
                     type="button" 
-                    className="btn btn-secondary"
+                    className="btn btn-secondary rounded-pill px-4"
                     onClick={() => setShowModal(false)}
                   >
-                    Hủy
+                    ❌ Hủy
                   </button>
-                  <button type="submit" className="btn btn-primary">
-                    {editingId ? 'Cập nhật' : 'Tạo mới'}
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary rounded-pill px-4"
+                    style={{ backgroundColor: '#2563EB' }}
+                  >
+                    {editingId ? '💾 Cập nhật' : '✨ Tạo mới'}
                   </button>
                 </div>
               </form>
