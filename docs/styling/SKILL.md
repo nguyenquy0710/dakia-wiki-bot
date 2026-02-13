@@ -380,3 +380,194 @@ From globals.css:
   </div>
 </div>
 ```
+
+## Admin CRUD Page Styling Patterns
+
+### CRUD Page Header
+```tsx
+<div className="d-flex justify-content-between align-items-center mb-4">
+  <h1>Quản lý Danh mục</h1>
+  <button className="btn btn-primary">
+    ➕ Tạo mới
+  </button>
+</div>
+```
+
+### Search Card
+```tsx
+<div className="card border-0 shadow-sm mb-4">
+  <div className="card-body">
+    <input
+      type="text"
+      className="form-control"
+      placeholder="🔍 Tìm kiếm..."
+    />
+  </div>
+</div>
+```
+
+### Item Card with Icon
+```tsx
+<div className="card border-0 shadow-sm h-100">
+  <div className="card-body">
+    {/* Icon + Title */}
+    <div className="d-flex align-items-center mb-3">
+      <div 
+        className="me-3 d-flex align-items-center justify-content-center"
+        style={{ 
+          fontSize: '2rem',
+          width: '60px',
+          height: '60px',
+          borderRadius: '12px',
+          backgroundColor: '#2563EB15',
+        }}
+      >
+        📁
+      </div>
+      <div className="flex-grow-1">
+        <h5 className="mb-0">Category Name</h5>
+        <small className="text-muted">category-slug</small>
+      </div>
+      <span className="badge bg-success">Active</span>
+    </div>
+    
+    {/* Description */}
+    <p className="text-muted mb-3">
+      Description text goes here
+    </p>
+    
+    {/* Actions */}
+    <div className="d-flex justify-content-between align-items-center">
+      <div className="text-muted small">
+        <span>Additional info</span>
+      </div>
+      <div className="btn-group btn-group-sm">
+        <button className="btn btn-outline-primary">Sửa</button>
+        <button className="btn btn-outline-danger">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Modal Styling
+```tsx
+{/* Full screen overlay */}
+<div 
+  className="modal show d-block" 
+  style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+  onClick={closeModal}
+>
+  {/* Modal dialog */}
+  <div 
+    className="modal-dialog modal-dialog-centered"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title">Tạo mới</h5>
+        <button 
+          type="button" 
+          className="btn-close"
+          onClick={closeModal}
+        />
+      </div>
+      
+      <div className="modal-body">
+        {/* Form fields */}
+        <div className="mb-3">
+          <label className="form-label">Tên *</label>
+          <input type="text" className="form-control" required />
+        </div>
+      </div>
+      
+      <div className="modal-footer">
+        <button className="btn btn-secondary">Hủy</button>
+        <button className="btn btn-primary">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Loading State Pattern
+```tsx
+{loading && (
+  <div className="text-center py-5">
+    <div className="spinner-border text-primary" role="status">
+      <span className="visually-hidden">Đang tải...</span>
+    </div>
+  </div>
+)}
+```
+
+### Empty State Pattern
+```tsx
+{!loading && items.length === 0 && (
+  <div className="col-12">
+    <div className="text-center py-5 text-muted">
+      <h4>Chưa có dữ liệu</h4>
+      <p>Nhấn "Tạo mới" để bắt đầu</p>
+    </div>
+  </div>
+)}
+```
+
+### Error Alert Pattern
+```tsx
+{error && (
+  <div className="alert alert-danger" role="alert">
+    {error}
+  </div>
+)}
+```
+
+### Grid Layout for Items
+```tsx
+<div className="row g-4">
+  {items.map((item) => (
+    <div key={item.id} className="col-md-6 col-lg-4">
+      <div className="card border-0 shadow-sm h-100">
+        {/* Card content */}
+      </div>
+    </div>
+  ))}
+</div>
+```
+
+### Form Grid Layout
+```tsx
+{/* Two-column form layout */}
+<div className="row">
+  <div className="col-md-6 mb-3">
+    <label className="form-label">Icon</label>
+    <input type="text" className="form-control" />
+  </div>
+  
+  <div className="col-md-6 mb-3">
+    <label className="form-label">Color</label>
+    <input type="color" className="form-control form-control-color" />
+  </div>
+</div>
+```
+
+### Badge Status Patterns
+```tsx
+{/* Success badge */}
+<span className="badge bg-success">Đã xuất bản</span>
+
+{/* Secondary/Draft badge */}
+<span className="badge bg-secondary">Nháp</span>
+
+{/* Custom colored badge */}
+<span 
+  className="badge"
+  style={{
+    background: 'rgba(37, 99, 235, 0.1)',
+    color: '#2563EB',
+    border: '1px solid rgba(37, 99, 235, 0.2)'
+  }}
+>
+  Custom
+</span>
+```

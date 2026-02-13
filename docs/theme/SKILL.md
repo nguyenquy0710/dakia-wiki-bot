@@ -216,6 +216,209 @@ When creating new components:
 7. **Shadows** should be subtle - use `--shadow-sm` to `--shadow-lg`
 8. **Text colors** - dark text: `#0F172A`, medium: `#475569`, light: `#64748B`
 
+## Admin Theme Patterns (NextAdmin Approach)
+
+### Admin Card Grid Layout
+```tsx
+// Modern card-based grid for admin CRUD pages
+<div className="row g-4">
+  <div className="col-md-6 col-lg-4">
+    <div className="card border-0 shadow-sm h-100">
+      <div className="card-body">
+        <div className="d-flex align-items-center mb-3">
+          <div 
+            className="me-3 d-flex align-items-center justify-content-center"
+            style={{ 
+              fontSize: '2rem',
+              width: '60px',
+              height: '60px',
+              borderRadius: '12px',
+              backgroundColor: '#2563EB15',  // Primary color with 15% opacity
+            }}
+          >
+            📁
+          </div>
+          <div className="flex-grow-1">
+            <h5 className="mb-0">Title</h5>
+            <small className="text-muted">subtitle</small>
+          </div>
+        </div>
+        <p className="text-muted mb-3">Description text</p>
+        <div className="btn-group btn-group-sm">
+          <button className="btn btn-outline-primary">Sửa</button>
+          <button className="btn btn-outline-danger">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Modal Component Styling
+```tsx
+// Full-screen overlay modal
+<div 
+  className="modal show d-block" 
+  style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+  onClick={() => setShowModal(false)}
+>
+  <div 
+    className="modal-dialog modal-dialog-centered"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title">Modal Title</h5>
+        <button 
+          type="button" 
+          className="btn-close"
+          onClick={() => setShowModal(false)}
+        />
+      </div>
+      <div className="modal-body">
+        {/* Modal content */}
+      </div>
+      <div className="modal-footer">
+        <button className="btn btn-secondary">Cancel</button>
+        <button className="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Icon with Color Background
+```tsx
+// Icon badge with themed background
+<div 
+  className="d-flex align-items-center justify-content-center"
+  style={{ 
+    fontSize: '2rem',
+    width: '60px',
+    height: '60px',
+    borderRadius: '12px',
+    backgroundColor: `${iconColor}15`,  // Color with 15% opacity
+  }}
+>
+  {icon}
+</div>
+```
+
+### Search Bar Pattern
+```tsx
+// Elevated search card
+<div className="card border-0 shadow-sm mb-4">
+  <div className="card-body">
+    <input
+      type="text"
+      className="form-control"
+      placeholder="🔍 Tìm kiếm..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  </div>
+</div>
+```
+
+### Loading State
+```tsx
+// Centered loading spinner
+<div className="text-center py-5">
+  <div className="spinner-border text-primary" role="status">
+    <span className="visually-hidden">Đang tải...</span>
+  </div>
+</div>
+```
+
+### Empty State
+```tsx
+// Empty state message
+<div className="col-12">
+  <div className="text-center py-5 text-muted">
+    <h4>Chưa có dữ liệu</h4>
+    <p>Nhấn "Tạo mới" để bắt đầu</p>
+  </div>
+</div>
+```
+
+### Status Badge Patterns
+```tsx
+// Published badge (success)
+<span className="badge bg-success">Đã xuất bản</span>
+
+// Draft badge (secondary)
+<span className="badge bg-secondary">Nháp</span>
+
+// Custom colored badge
+<span 
+  className="badge"
+  style={{
+    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+    color: '#2563EB',
+    border: '1px solid rgba(37, 99, 235, 0.2)'
+  }}
+>
+  Custom
+</span>
+```
+
+### Admin Sidebar Pattern
+```tsx
+<aside className="bg-dark text-white" style={{ width: '250px' }}>
+  <div className="p-4">
+    <h4 className="fw-bold mb-4">
+      <span style={{ color: '#2563EB' }}>DAKIA</span> Admin
+    </h4>
+    <nav>
+      <ul className="nav flex-column">
+        <li className="nav-item mb-2">
+          <a className="nav-link text-white" href="/admin/dashboard">
+            📊 Dashboard
+          </a>
+        </li>
+        <li className="nav-item mb-2">
+          <a className="nav-link text-white" href="/admin/categories">
+            📂 Danh mục
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+```
+
+## Color Picker & Icon Selector
+
+### Color Input Pattern
+```tsx
+<div className="mb-3">
+  <label className="form-label">Màu sắc</label>
+  <input
+    type="color"
+    className="form-control form-control-color"
+    name="color"
+    value={formData.color}
+    onChange={handleInputChange}
+  />
+</div>
+```
+
+### Icon/Emoji Input Pattern
+```tsx
+<div className="mb-3">
+  <label className="form-label">Icon (Emoji)</label>
+  <input
+    type="text"
+    className="form-control"
+    name="icon"
+    value={formData.icon}
+    onChange={handleInputChange}
+    placeholder="📁"
+    maxLength={2}
+  />
+</div>
+```
+
 ## Color Accessibility
 
 Ensure color contrast ratios meet WCAG 2.1 AA standards:
